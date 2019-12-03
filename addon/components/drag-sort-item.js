@@ -32,6 +32,7 @@ export default Component.extend({
   handle          : null,
   isHorizontal    : false,
   isRtl           : false,
+  sourceOnly      : false,
 
   dragEndAction                  : undefined,
   determineForeignPositionAction : undefined,
@@ -116,18 +117,20 @@ export default Component.extend({
     return index === count - 1
   }),
 
-  shouldShowPlaceholderBefore : computed('isDraggingOver', 'isDraggingUp', function () {
+  shouldShowPlaceholderBefore : computed('isDraggingOver', 'isDraggingUp', 'sourceOnly', function () {
     const isDraggingOver = this.get('isDraggingOver')
     const isDraggingUp   = this.get('isDraggingUp')
+    const sourceOnly     = this.get('sourceOnly')
 
-    return isDraggingOver && isDraggingUp
+    return !sourceOnly && isDraggingOver && isDraggingUp
   }),
 
-  shouldShowPlaceholderAfter : computed('isDraggingOver', 'isDraggingUp', function () {
+  shouldShowPlaceholderAfter : computed('isDraggingOver', 'isDraggingUp', 'sourceOnly', function () {
     const isDraggingOver = this.get('isDraggingOver')
     const isDraggingUp   = this.get('isDraggingUp')
+    const sourceOnly     = this.get('sourceOnly')
 
-    return isDraggingOver && !isDraggingUp
+    return !sourceOnly && isDraggingOver && !isDraggingUp
   }),
 
 
@@ -229,6 +232,13 @@ export default Component.extend({
   },
 
   draggingOver (event) {
+    const sourceOnly          = this.get('sourceOnly')
+
+    if (sourceOnly) { 
+      event.preventDefault()
+      return
+    }
+
     const group               = this.get('group')
     const index               = this.get('index')
     const items               = this.get('items')
