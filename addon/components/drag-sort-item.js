@@ -99,15 +99,16 @@ export default Component.extend({
     return isDragging && items === sourceList && index === sourceIndex
   }),
 
-  isDraggingOver : computed('dragSort.isDragging', 'items', 'targetList', 'index', 'targetIndex', 'isDragged', function () {
+  isDraggingOver : computed('dragSort.isDragging', 'items', 'targetList', 'index', 'targetIndex', 'sourceOnly', 'isDragged', function () {
     const isDragging  = this.get('dragSort.isDragging')
     const items       = this.get('items')
     const targetList  = this.get('targetList')
     const index       = this.get('index')
     const targetIndex = this.get('targetIndex')
     const isDragged   = this.get('isDragged')
+    const sourceOnly  = this.get('sourceOnly')
 
-    return isDragging && items === targetList && index === targetIndex && !isDragged
+    return !sourceOnly && isDragging && items === targetList && index === targetIndex && !isDragged
   }),
 
   isLast : computed('index', 'items.[]', function () {
